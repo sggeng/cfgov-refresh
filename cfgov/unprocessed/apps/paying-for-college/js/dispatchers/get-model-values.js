@@ -46,13 +46,19 @@ function getConstantsValue( name ) {
 
 /**
  * getStateValue - gets the property from the application state model
- *
  * @param {string} prop - The property name
- *
  * @returns {string} The value of the property in the stateModel Object
  */
 function getStateValue( prop ) {
   return stateModel.values[prop];
+}
+
+/**
+ * getAllStateValues - retrieves the entire values property (object) of the stateModel
+ * @returns {Object} The values stored in the stateModel Object
+ */
+function getAllStateValues( prop ) {
+  return Object.assign( {}, stateModel.values );
 }
 
 
@@ -61,5 +67,6 @@ export {
   getSchoolValue,
   getConstantsValue,
   getExpensesValue,
+  getAllStateValues,
   getStateValue
 };

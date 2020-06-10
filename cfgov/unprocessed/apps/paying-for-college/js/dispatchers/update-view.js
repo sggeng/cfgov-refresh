@@ -54,11 +54,41 @@ const updateStateInDom = ( prop, value ) => {
   navigationView.updateStateInDom( prop, value );
 }
 
+const updateCostOfBorrowingChart = () => {
+  chartView.updateCostOfBorrowingChart();
+};
+
+const updateMakePlanChart = () => {
+  chartView.updateMakePlanChart();
+};
+
+const updateMaxDebtChart = () => {
+  chartView.updateMaxDebtChart();
+};
+
+const updateAffordingChart = () => {
+  chartView.updateAffordingChart();
+};
+
+const updateGradMeterChart = () => {
+  chartView.updateGradMeterChart();
+};
+
+const updateRepaymentMeterChart = () => {
+  chartView.updateRepaymentMeterChart();
+};
+
 export {
   updateExpensesView,
   updateFinancialView,
   updateNavigationView,
   updateSchoolItems,
   updateSchoolView,
-  updateStateInDom
+  updateStateInDom,
+  updateCostOfBorrowingChart,
+  updateMakePlanChart,
+  updateMaxDebtChart,
+  updateAffordingChart,
+  updateGradMeterChart,
+  updateRepaymentMeterChart
 };

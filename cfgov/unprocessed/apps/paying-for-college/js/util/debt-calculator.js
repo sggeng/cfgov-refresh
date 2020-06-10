@@ -103,6 +103,8 @@ function debtCalculator() {
 
   debts.tenYearInterest = debts.tenYearTotal - debts.totalAtGrad;
   debts.twentyFiveYearInterest = debts.twentyFiveYearTotal - debts.totalAtGrad;
+  debts.repayHours = debts.tenYearMonthly / 15;
+  debts.repayWorkWeeks = debts.repayHours / 40;
 
   // TODO: Differentiate grads versus undergrads
 

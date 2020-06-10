@@ -5,6 +5,7 @@ import { getExpenses } from '../dispatchers/get-api-values.js';
 import { getFinancialValue } from '../dispatchers/get-model-values.js';
 import { setUrlQueryString } from '../util/url-parameter-utils.js';
 import { stringToNum } from '../util/number-utils.js';
+import { updateState } from '../dispatchers/update-state.js';
 
 // Please excuse some uses of underscore for code/HTML property clarity!
 /* eslint camelcase: ["error", {properties: "never"}] */
@@ -31,6 +32,14 @@ const expensesModel = {
 
     expensesModel.values.total_expenses = totalExpenses;
     expensesModel.values.total_remainder = getFinancialValue( 'salary_monthly' ) - totalExpenses;
+    if ( expensesModel.values.total_remainder > 0 ) {
+      updateState.byProperty( 'expensesRemainder', 'surplus' );
+    } else if ( expensesModel.values.total_remainder < 0 ) {
+      updateState.byProperty( 'expensesRemainder', 'shortage' );
+    }
+
+    updateExpensesView();
+
   },
 
   /**

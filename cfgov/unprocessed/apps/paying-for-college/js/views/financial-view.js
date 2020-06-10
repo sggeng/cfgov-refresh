@@ -188,11 +188,14 @@ const financialView = {
         const prop = elem.dataset.financialItem;
         const isRate = prop.substr( 0, 5 ) === 'rate_';
         const isFee = prop.substr( 0, 4 ) === 'fee_';
+        const isNumber = elem.dataset.isNumber ===  'true';
         let val = getFinancialValue( prop );
         if ( isFee ) {
           val = decimalToPercentString( val, 3 );
         } else if ( isRate ) {
           val = decimalToPercentString( val, 2 );
+        } else if ( isNumber ) {
+          val = Math.round( val * 100 ) / 100
         } else {
           val = numberToMoney( { amount: val, decimalPlaces: 0 } );
         }

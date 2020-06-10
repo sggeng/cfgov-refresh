@@ -177,7 +177,7 @@ const schoolView = {
     // Set up nodeLists
     schoolView._searchSection = body.querySelector( '#college-costs_school-search' );
     schoolView._searchBox = body.querySelector( '#search__school-input' );
-    schoolView._searchResults = body.querySelector( '#search__results' );
+    schoolView._searchResults = body.querySelector( '#search-results' );
     schoolView._programRadios = body.querySelectorAll( '.school-search_additional-info label' );
     schoolView._schoolInfo = body.querySelector( '.school-search_additional-info' );
     schoolView._schoolItems = document.querySelectorAll( '[data-school-item]' );

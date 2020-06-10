@@ -69,14 +69,14 @@ const init = function() {
   expensesModel.init();
   financialModel.init();
 
-  updateModelsFromQueryString( getQueryVariables() );
-
   schoolView.init( body );
   expensesView.init( body );
   financialView.init( body );
   navigationView.init( body );
   chartView.init( body );
   Expandable.init();
+
+  updateModelsFromQueryString( getQueryVariables() );
 
   financialView.updateFinancialItems();
 

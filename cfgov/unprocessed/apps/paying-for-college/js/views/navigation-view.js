@@ -14,7 +14,8 @@ const navigationView = {
   _navButtons: null,
   _nextButton: null,
   _appSegment: null,
-  _stateDomElememnt: null,
+  _stateDomElem: null,
+  _affordingChoices: null,
 
   /**
    * _addButtonListeners - Add event listeners for nav buttons
@@ -27,6 +28,14 @@ const navigationView = {
       bindEvent( elem, events );
     } );
 
+    // navigationView._affordingChoices.forEach( elem => {
+    //   const events = {
+    //     click: this._handleAffordingChoicesClick
+    //   };
+    //   bindEvent( elem, events );
+    // } );
+
+
     bindEvent( navigationView._nextButton, { click: this._handleNextButtonClick } );
     bindEvent( navigationView._getStartedBtn, { click: this._handleGetStartedBtnClick } );
   },
@@ -36,9 +45,17 @@ const navigationView = {
    */
   _addPopStateListener: function() {
     const events = {
-      popstate: stateModel._handlePopState
+      popstate: navigationView._handlePopState
     };
     bindEvent( window, events );
+  },
+
+  /**
+   * _handleAffordingChoicesClick - Handle clicks on Affording Payment choices
+   * @param {Object} event - The click event
+   */
+  _handleAffordingChoicesClick: function( event ) {
+    console.log( event.target );
   },
 
   /**
@@ -60,13 +77,11 @@ const navigationView = {
    */
   _handlePopState: function( event ) {
     if ( event.state ) {
-      // window.history.replaceState( this.values, null, '' );
-      stateModel.values.activeSection = event.state.activeSection;
-      // stateModel.setValue( 'activeSection', event.state.activeSection );
+      window.history.replaceState( getAllStateValues(), null, '' );
+
+      updateState.activeSection( event.state.activeSection );
     }
-
     updateNavigationView();
-
   },
 
   /**
@@ -80,17 +95,10 @@ const navigationView = {
       updateState.activeSection( target.dataset.nav_item );
     } else if ( typeof target.dataset.nav_section !== 'undefined' ) {
       // Close all open menu section
-      navigationView._navMenu.querySelectorAll('[data-nav-is-open="True"]').forEach( elem => {
-        elem.setAttribute('data-nav-is-open', 'False');
-      } );
-
-      // Open the clicked menu section
-      const parent = closest( target, '.m-list_item__parent' );
-      parent.setAttribute('data-nav-is-open', 'True');
-
-      /* const elem = parent.querySelector( '.o-college-costs-nav__section ul li button' );
-         updateState.activeSection( elem.dataset.nav_item ); */
+      target.setAttribute( 'data-nav-is-open', 'True' );
+      navigationView._updateSideNav();
     }
+
   },
 
   /**
@@ -107,6 +115,9 @@ const navigationView = {
    * @param {String} activeName - name of the active app section
    */
   _updateSideNav: function( activeName ) {
+    if ( typeof activeName === 'undefined' ) {
+      activeName = getStateValue( 'activeName' );
+    }
     const navItem = navigationView._navMenu.querySelector( '[data-nav_item="' + activeName + '"]' );
     const activeElem = closest( navItem, 'li' );
     const activeParent = closest( activeElem, 'li' );
@@ -119,6 +130,9 @@ const navigationView = {
     activeElem.setAttribute( 'data-nav-is-active', 'True' );
     activeParent.setAttribute( 'data-nav-is-open', 'True' );
     activeParent.setAttribute( 'data-nav-is-active', 'True' );
+    activeParent.querySelectorAll( '.m-list_item' ).forEach( elem => {
+      elem.setAttribute( 'data-nav-is-active', 'True' );
+    } );
 
   },
 
@@ -178,12 +192,13 @@ const navigationView = {
     this._getStartedBtn = body.querySelector( '.college-costs_intro-segment .btn__get-started' );
     this._appSegment = body.querySelector( '.college-costs_app-segment' );
     this._sections = body.querySelectorAll( '.college-costs_tool-section' );
+    this._stateDomElem = document.querySelector( 'main.college-costs' );
+    this._affordingChoices = document.querySelectorAll( '.affording-loans-choices .m-form-field' );
 
     this._addButtonListeners();
     this.updateView();
 
     window.history.replaceState( getAllStateValues(), null, '' );
-    this._stateDomElem = document.querySelector( 'main.college-costs' );
     this._addPopStateListener();
 
 
