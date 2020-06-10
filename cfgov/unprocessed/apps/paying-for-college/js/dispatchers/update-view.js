@@ -4,60 +4,61 @@ import { financialView } from '../views/financial-view.js';
 import { navigationView } from '../views/navigation-view.js';
 import { schoolView } from '../views/school-view.js';
 
+/**
+ * This file is a dispatcher to call various methods of the view Objects. 
+ */
+
+/**
+ * updateExpensesView - updates the expensesView 
+ */
 const updateExpensesView = () => {
   expensesView.updateExpensesView();
 };
 
+/**
+ * updateFinancialView - updates the financialView 
+ */
 const updateFinancialView = () => {
   financialView.updateFinancialItems();
 };
 
-const updateCostOfBorrowingChart = () => {
-  chartView.updateCostOfBorrowingChart();
-};
-
-const updateMakePlanChart = () => {
-  chartView.updateMakePlanChart();
-};
-
-const updateMaxDebtChart = () => {
-  chartView.updateMaxDebtChart();
-};
-
-const updateAffordingChart = () => {
-  chartView.updateAffordingChart();
-};
-
-const updateGradMeterChart = () => {
-  chartView.updateGradMeterChart();
-};
-
-const updateRepaymentMeterChart = () => {
-  chartView.updateRepaymentMeterChart();
-};
-
+/**
+ * updateNavigationView - updates the navigationView 
+ */
 const updateNavigationView = () => {
   navigationView.updateView();
-}
+};
 
+/**
+ * updateSchoolView - updates the schoolView 
+ */
 const updateSchoolView = () => {
   schoolView.updateSchoolView();
-}
+};
 
+/**
+ * updateSchoolItems - updates the data-school-item elements 
+ */
 const updateSchoolItems = () => {
   schoolView.updateSchoolItems();
+};
+
+/**
+ * updateStateInDom - manages dataset for the MAIN element, which helps display UI elements
+ * properly
+ * @param {String} property - The state property to modify
+ * @param {String} value - The new value of the property
+ * NOTE: if the value is null or the Boolean 'false', the data attribute will be removed
+ */
+const updateStateInDom = ( prop, value ) => {
+  navigationView.updateStateInDom( prop, value );
 }
 
 export {
   updateExpensesView,
   updateFinancialView,
-  updateCostOfBorrowingChart,
-  updateMakePlanChart,
-  updateMaxDebtChart,
-  updateAffordingChart,
-  updateGradMeterChart,
-  updateRepaymentMeterChart,
   updateNavigationView,
   updateSchoolItems,
-  updateSchoolView
+  updateSchoolView,
+  updateStateInDom
 };

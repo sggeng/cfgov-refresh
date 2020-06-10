@@ -3,7 +3,7 @@
 import { closest } from '../../../../js/modules/util/dom-traverse';
 import { updateState } from '../dispatchers/update-state.js';
 import { bindEvent } from '../../../../js/modules/util/dom-events';
-import { getStateValue } from '../dispatchers/get-model-values.js';
+import { getStateValue, getAllStateValues } from '../dispatchers/get-model-values.js';
 
 const navigationView = {
   _contentSidebar: null,
@@ -14,7 +14,11 @@ const navigationView = {
   _navButtons: null,
   _nextButton: null,
   _appSegment: null,
+  _stateDomElememnt: null,
 
+  /**
+   * _addButtonListeners - Add event listeners for nav buttons
+   */
   _addButtonListeners: function( ) {
     navigationView._navButtons.forEach( elem => {
       const events = {
@@ -22,12 +26,25 @@ const navigationView = {
       };
       bindEvent( elem, events );
     } );
-  
-    bindEvent( navigationView._nextButton, { click: this._handleNextButtonClick } );
 
+    bindEvent( navigationView._nextButton, { click: this._handleNextButtonClick } );
     bindEvent( navigationView._getStartedBtn, { click: this._handleGetStartedBtnClick } );
   },
 
+  /**
+   * _addPopStateListener - Add a listener for "popstate" events
+   */
+  _addPopStateListener: function() {
+    const events = {
+      popstate: stateModel._handlePopState
+    };
+    bindEvent( window, events );
+  },
+
+  /**
+   * _handleGetStartedBtnClick - Handle the click of the "Get Started" button
+   * @param {Object} event - the click event
+   */
   _handleGetStartedBtnClick: function( event ) {
     updateState.getStarted( true );
     updateState.activeSection( 'school-info' );
@@ -37,31 +54,58 @@ const navigationView = {
     window.scrollTo( 0, document.querySelector( '.college-costs' ).offsetTop );
   },
 
+  /**
+   * _handlePopState - handle popstate events
+   * @param {Object} event - the popstate event
+   */
+  _handlePopState: function( event ) {
+    if ( event.state ) {
+      // window.history.replaceState( this.values, null, '' );
+      stateModel.values.activeSection = event.state.activeSection;
+      // stateModel.setValue( 'activeSection', event.state.activeSection );
+    }
+
+    updateNavigationView();
+
+  },
+
+  /**
+   * _handleNavButtonClick - Handle click event for secondary nav
+   * @param {Object} event - click event
+   */
   _handleNavButtonClick: function( event ) {
     event.preventDefault();
     const target = event.target;
-
-    // Click on a nav menu page link
     if ( typeof target.dataset.nav_item !== 'undefined' ) {
       updateState.activeSection( target.dataset.nav_item );
-
-    // Click on a nav section header
     } else if ( typeof target.dataset.nav_section !== 'undefined' ) {
       // Close all open menu section
-      navigationView._navListItems.forEach( elem => {
-        elem.setAttribute( 'data-nav-is-active', 'False' );
-        elem.setAttribute( 'data-nav-is-open', 'False' );
+      navigationView._navMenu.querySelectorAll('[data-nav-is-open="True"]').forEach( elem => {
+        elem.setAttribute('data-nav-is-open', 'False');
       } );
+
       // Open the clicked menu section
-      closest( target, 'li' ).setAttribute( 'data-nav-is-open', 'True'  );
+      const parent = closest( target, '.m-list_item__parent' );
+      parent.setAttribute('data-nav-is-open', 'True');
+
+      /* const elem = parent.querySelector( '.o-college-costs-nav__section ul li button' );
+         updateState.activeSection( elem.dataset.nav_item ); */
     }
   },
 
+  /**
+   * _handleNextButtonClick - handle the click event for the "Next" button
+   * @param {Object} event - click event
+   */
   _handleNextButtonClick: function( event ) {
     updateState.nextSection();
     window.scrollTo( 0, document.querySelector( '.college-costs' ).offsetTop );
   },
 
+  /**
+   * _updateSideNav - Update the side nav
+   * @param {String} activeName - name of the active app section
+   */
   _updateSideNav: function( activeName ) {
     const navItem = navigationView._navMenu.querySelector( '[data-nav_item="' + activeName + '"]' );
     const activeElem = closest( navItem, 'li' );
@@ -78,6 +122,10 @@ const navigationView = {
 
   },
 
+  /**
+   * _showAndHideSections - Hide all app sections, then show appropriate ones
+   * @param {String} activeName - Name of the active section
+   */
   _showAndHideSections: function( activeName ) {
     const query = '.college-costs_tool-section[data-tool-section="' + activeName + '"]';
     const activeSection = document.querySelector( query );
@@ -89,6 +137,9 @@ const navigationView = {
     activeSection.classList.add( 'active' );
   },
 
+  /**
+   * updateView - Public method to run private update methods
+   */
   updateView: function() {
     const started = getStateValue( 'gotStarted' );
     if ( started ) {
@@ -98,6 +149,25 @@ const navigationView = {
     }
   },
 
+  /**
+   * updateStateInDom - manages dataset for the MAIN element, which helps display UI elements
+   * properly
+   * @param {String} property - The state property to modify
+   * @param {String} value - The new value of the property
+   * NOTE: if the value is null or the Boolean 'false', the data attribute will be removed
+   */
+  updateStateInDom: function( property, value ) {
+    if ( value === false || value === null ) {
+      navigationView._stateDomElem.removeAttribute( property );
+    } else {
+      navigationView._stateDomElem.setAttribute( 'data-state_' + property, value );
+    }
+  },
+
+  /**
+   * init - Initialize the navigation view
+   * @param { Object } body - The body element of the page
+   */
   init: function( body ) {
     this._navMenu = body.querySelector( '.o-secondary-navigation' );
     this._navButtons = body.querySelectorAll( '.o-secondary-navigation a' );
@@ -110,10 +180,14 @@ const navigationView = {
     this._sections = body.querySelectorAll( '.college-costs_tool-section' );
 
     this._addButtonListeners();
-
     this.updateView();
 
-  },
+    window.history.replaceState( getAllStateValues(), null, '' );
+    this._stateDomElem = document.querySelector( 'main.college-costs' );
+    this._addPopStateListener();
+
+
+  }
 
 };
 
