@@ -78,8 +78,10 @@ const financialModel = {
       fellowAssist : 'total_fellowAssist',
       income : 'total_income',
       fedLoan : 'total_fedLoans',
-      loan : 'total_otherLoans',
-      workStud : 'total_workStudy'
+      publicLoan : 'total_publicLoans',
+      workStudy : 'total_workStudy',
+      plusLoan: 'total_plusLoans',
+      privLoan: 'total_privateLoans'
     }
 
     // Reset all totals to 0
@@ -99,11 +101,12 @@ const financialModel = {
     }
 
     // Calculate more totals
-    vals.total_borrowing = vals.total_fedLoans + vals.total_otherLoans;
+    vals.total_borrowing = vals.total_fedLoans + vals.total_publicLoans + vals.total_privateLoans
+        + vals.total_plusLoans;
     vals.total_contributions = vals.total_grants + vals.total_scholarships + vals.total_savings
         + vals.total_workStudy;
-    vals.total_costs = vals.total_directCosts + vals.total_indirectCosts;
-    vals.total_grantsScholarships = vals.total_grantsScholarships + vals.total_scholarships;
+    vals.total_costs = vals.total_directCosts + vals.total_indirectCosts + vals.otherCost_additional;
+    vals.total_grantsScholarships = vals.total_grants + vals.total_scholarships;
     vals.total_otherResources = vals.total_savings + vals.total_income;
     vals.total_funding = vals.total_contributions + vals.total_borrowing;
     vals.total_gap = vals.total_costs - vals.total_funding;
@@ -117,6 +120,8 @@ const financialModel = {
     if ( vals.total_gap < 0 ) {
       vals.total_gap = 0;
     }
+
+    console.log( financialModel.values );
 
   },
 

@@ -11,6 +11,7 @@ const navigationView = {
   _sections: null,
   _navMenu: null,
   _navListItems: null,
+  _navItems: null,
   _navButtons: null,
   _nextButton: null,
   _appSegment: null,
@@ -28,12 +29,12 @@ const navigationView = {
       bindEvent( elem, events );
     } );
 
-    // navigationView._affordingChoices.forEach( elem => {
-    //   const events = {
-    //     click: this._handleAffordingChoicesClick
-    //   };
-    //   bindEvent( elem, events );
-    // } );
+    navigationView._affordingChoices.forEach( elem => {
+      const events = {
+        click: this._handleAffordingChoicesClick
+      };
+      bindEvent( elem, events );
+    } );
 
 
     bindEvent( navigationView._nextButton, { click: this._handleNextButtonClick } );
@@ -55,7 +56,9 @@ const navigationView = {
    * @param {Object} event - The click event
    */
   _handleAffordingChoicesClick: function( event ) {
-    console.log( event.target );
+    const parent = closest( event.target, '.m-form-field' );
+    const input = parent.querySelector( 'input[name="affording-display-radio"]' );
+    updateState.byProperty( 'expensesChoice', input.value );
   },
 
   /**
@@ -94,9 +97,7 @@ const navigationView = {
     if ( typeof target.dataset.nav_item !== 'undefined' ) {
       updateState.activeSection( target.dataset.nav_item );
     } else if ( typeof target.dataset.nav_section !== 'undefined' ) {
-      // Close all open menu section
-      target.setAttribute( 'data-nav-is-open', 'True' );
-      navigationView._updateSideNav();
+      closest( target, '[data-nav-is-open]' ).setAttribute( 'data-nav-is-open', 'True' );
     }
 
   },
@@ -116,9 +117,14 @@ const navigationView = {
    */
   _updateSideNav: function( activeName ) {
     if ( typeof activeName === 'undefined' ) {
-      activeName = getStateValue( 'activeName' );
+      activeName = getStateValue( 'activeSection' );
     }
-    const navItem = navigationView._navMenu.querySelector( '[data-nav_item="' + activeName + '"]' );
+    // clear active-sections
+    navigationView._navItems.forEach( elem => {
+      elem.classList.remove( 'active-section' );
+    } );
+
+    const navItem = document.querySelector( '[data-nav_item="' + activeName + '"]' );
     const activeElem = closest( navItem, 'li' );
     const activeParent = closest( activeElem, 'li' );
 
@@ -133,6 +139,8 @@ const navigationView = {
     activeParent.querySelectorAll( '.m-list_item' ).forEach( elem => {
       elem.setAttribute( 'data-nav-is-active', 'True' );
     } );
+
+    navItem.classList.add( 'active-section' );
 
   },
 
@@ -186,6 +194,7 @@ const navigationView = {
     this._navMenu = body.querySelector( '.o-secondary-navigation' );
     this._navButtons = body.querySelectorAll( '.o-secondary-navigation a' );
     this._navListItems = body.querySelectorAll( '.o-secondary-navigation li' );
+    this._navItems = body.querySelectorAll( '[data-nav_item]' );
     this._nextButton = body.querySelector( '.college-costs_tool-section_buttons .btn__next-step' );
     this._contentSidebar = body.querySelector( '.content_sidebar' );
     this._introduction = body.querySelector( '.college-costs_intro-segment' );

@@ -81,15 +81,15 @@ function _buildUrlQueryString() {
 		subl: financialValues.fedLoan_directSub,
 		unsl: financialValues.fedLoan_directUnsub,
 
-		insl: financialValues.instiLoan_institutional,
-		insr: financialValues.rate_institutionalLoan,
-		insf: financialValues.fee_institutionalLoan,
-		stal: financialValues.loan_stateLoan,
-		star: financialValues.rate_stateLoan,
-		staf: financialValues.fee_stateLoan,
-		npol: financialValues.loan_nonprofitLoan,
-		npor: financialValues.rate_nonprofitLoan,
-		npof: financialValues.fee_nonprofitLoan,
+		insl: financialValues.publicLoan_institutional,
+		insr: financialValues.rate_institutional,
+		insf: financialValues.fee_institutional,
+		stal: financialValues.publicLoan_state,
+		star: financialValues.rate_state,
+		staf: financialValues.fee_state,
+		npol: financialValues.publicLoan_nonprofit,
+		npor: financialValues.rate_nonprofit,
+		npof: financialValues.fee_nonprofit,
 
 		pers: financialValues.savings_personal,
 		fams: financialValues.savings_family,
@@ -104,7 +104,7 @@ function _buildUrlQueryString() {
 		pvr1: financialValues.privloan_privLoanRate1,
 		pvf1: financialValues.privloan_privLoanFee1,
 
-		plus: financialValues.fedLoan_parentPlus,
+		plus: financialValues.plusLoan_gradPlus,
 	};
 
 	let expensesVariables = {
@@ -122,7 +122,7 @@ function _buildUrlQueryString() {
 	}
 
 	if ( stateValues.program_type === 'graduate' ) {
-		variables.plus = financialValues.loan_gradPlus;
+		variables.plus = financialValues.plusLoan_gradPlus;
 	}
 
 	// TODO: Don't bother putting expenses in the URL if they equal the default

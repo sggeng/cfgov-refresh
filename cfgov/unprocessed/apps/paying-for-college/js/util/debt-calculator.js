@@ -16,9 +16,11 @@ import { updateFinancial, updateFinancialsFromSchool } from '../dispatchers/upda
 
 
 function debtCalculator() {
-  const fedLoans = [ 'directSub', 'directUnsub', 'gradPlus', 'parentPlus' ];
-  const otherLoans = [ 'state', 'institutional', 'nonprofit', 'privateLoan1' ];
-  const allLoans = fedLoans.concat( otherLoans );
+  const fedLoans = [ 'directSub', 'directUnsub' ];
+  const plusLoans = [ 'gradPlus', 'parentPlus' ];
+  const publicLoans = [ 'state', 'institutional', 'nonprofit' ];
+  const privLoans = [ 'privateLoan1' ]
+  const allLoans = fedLoans.concat( plusLoans, publicLoans, privLoans );
   let fin = financialModel.values;
   let debts = {
     totalAtGrad: 0,
@@ -31,7 +33,7 @@ function debtCalculator() {
   };
 
   // Find federal debts at graduation
-  fedLoans.forEach( ( key ) => {
+  fedLoans.forEach( key => {
     // DIRECT Subsidized loans are special
     let val = 0;
     if ( key === 'directSub' ) {
@@ -41,24 +43,51 @@ function debtCalculator() {
         fin[ 'rate_' + key ], fin.other_programLength, 6 );
     }
 
-    // if ( val === NaN ) {
-    //   val = 0;
-    // }
+    if ( isNaN( val ) ) {
+      val = 0;
+    }
     debts[key] = val;
+  } );
 
+  plusLoans.forEach( key => {
+    let val = calcDebtAtGrad(
+      fin[ 'plusLoan_' + key ],
+      fin[ 'rate_' + key ],
+      fin.other_programLength,
+      6 );
+
+    if ( isNaN( val ) ) {
+      val = 0;
+    }
+    debts[key] = val;
   } );
 
   // calculate debts of other loans
 
-  otherLoans.forEach( ( key ) => {
+  publicLoans.forEach( ( key ) => {
     let val = calcDebtAtGrad(
-        fin[ 'loan_' + key],
+        fin[ 'publicLoan_' + key],
         fin[ 'rate_' + key ],
         fin.other_programLength,
         0
       );
 
-    if ( val === NaN ) {
+    if ( isNaN( val ) ) {
+      val = 0;
+    }
+    debts[key] = val;
+
+  } );
+
+  publicLoans.forEach( ( key ) => {
+    let val = calcDebtAtGrad(
+        fin[ 'privateLoan_' + key],
+        fin[ 'rate_' + key ],
+        fin.other_programLength,
+        0
+      );
+
+    if ( isNaN( val ) ) {
       val = 0;
     }
     debts[key] = val;
@@ -74,7 +103,7 @@ function debtCalculator() {
         10
       )
 
-    if ( tenYearMonthly === NaN ) {
+    if ( isNaN( tenYearMonthly ) ) {
       tenYearMonthly = 0;
     }
     // debts[ key + '_tenYearMonthly' ] = tenYearMonthly;
@@ -90,7 +119,7 @@ function debtCalculator() {
         10
       )
 
-    if ( twentyFiveYearMonthly === NaN ) {
+    if ( isNaN( twentyFiveYearMonthly ) ) {
       twentyFiveYearMonthly = 0;
     }
     // debts[ key + '_twentyFiveYearMonthly' ] = twentyFiveYearMonthly;

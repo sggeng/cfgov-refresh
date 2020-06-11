@@ -82,7 +82,6 @@ const stateModel = {
     if ( stateModel.textVersions.hasOwnProperty( name ) ) {
       const key = name + 'Text';
       stateModel.values[key] = stateModel.textVersions[name][value];
-      console.log( name, stateModel.values[key] );
       updateSchoolItems();
     }
 
