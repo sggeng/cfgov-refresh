@@ -5,7 +5,6 @@
  * @param {Number} programLength - Program length in years
  * @param {Number} deferPeriod - Deferral period, in months
  */
-
 function calcDebtAtGrad( amount, rate, programLength, deferPeriod ) {
 
   const total = amount * rate / 12 *

@@ -5,39 +5,39 @@ import { navigationView } from '../views/navigation-view.js';
 import { schoolView } from '../views/school-view.js';
 
 /**
- * This file is a dispatcher to call various methods of the view Objects. 
+ * This file is a dispatcher to call various methods of the view Objects.
  */
 
 /**
- * updateExpensesView - updates the expensesView 
+ * updateExpensesView - updates the expensesView
  */
 const updateExpensesView = () => {
   expensesView.updateExpensesView();
 };
 
 /**
- * updateFinancialView - updates the financialView 
+ * updateFinancialView - updates the financialView
  */
 const updateFinancialView = () => {
   financialView.updateFinancialItems();
 };
 
 /**
- * updateNavigationView - updates the navigationView 
+ * updateNavigationView - updates the navigationView
  */
 const updateNavigationView = () => {
   navigationView.updateView();
 };
 
 /**
- * updateSchoolView - updates the schoolView 
+ * updateSchoolView - updates the schoolView
  */
 const updateSchoolView = () => {
   schoolView.updateSchoolView();
 };
 
 /**
- * updateSchoolItems - updates the data-school-item elements 
+ * updateSchoolItems - updates the data-school-item elements
  */
 const updateSchoolItems = () => {
   schoolView.updateSchoolItems();
@@ -46,13 +46,37 @@ const updateSchoolItems = () => {
 /**
  * updateStateInDom - manages dataset for the MAIN element, which helps display UI elements
  * properly
- * @param {String} property - The state property to modify
+ * @param {String} prop - The state property to modify
  * @param {String} value - The new value of the property
  * NOTE: if the value is null or the Boolean 'false', the data attribute will be removed
  */
 const updateStateInDom = ( prop, value ) => {
   navigationView.updateStateInDom( prop, value );
-}
+};
+
+const updateCostOfBorrowingChart = () => {
+  chartView.updateCostOfBorrowingChart();
+};
+
+const updateMakePlanChart = () => {
+  chartView.updateMakePlanChart();
+};
+
+const updateMaxDebtChart = () => {
+  chartView.updateMaxDebtChart();
+};
+
+const updateAffordingChart = () => {
+  chartView.updateAffordingChart();
+};
+
+const updateGradMeterChart = () => {
+  chartView.updateGradMeterChart();
+};
+
+const updateRepaymentMeterChart = () => {
+  chartView.updateRepaymentMeterChart();
+};
 
 export {
   updateExpensesView,
@@ -60,5 +84,11 @@ export {
   updateNavigationView,
   updateSchoolItems,
   updateSchoolView,
-  updateStateInDom
+  updateStateInDom,
+  updateCostOfBorrowingChart,
+  updateMakePlanChart,
+  updateMaxDebtChart,
+  updateAffordingChart,
+  updateGradMeterChart,
+  updateRepaymentMeterChart
 };
