@@ -19,8 +19,8 @@ function debtCalculator() {
   const fedLoans = [ 'directSub', 'directUnsub' ];
   const plusLoans = [ 'gradPlus', 'parentPlus' ];
   const publicLoans = [ 'state', 'institutional', 'nonprofit' ];
-  const privLoans = [ 'privateLoan1' ];
-  const allLoans = fedLoans.concat( plusLoans, publicLoans, privLoans );
+  const privateLoans = [ 'privateLoan1' ];
+  const allLoans = fedLoans.concat( plusLoans, publicLoans, privateLoans );
   const fin = financialModel.values;
   const debts = {
     totalAtGrad: 0,
@@ -79,9 +79,9 @@ function debtCalculator() {
 
   } );
 
-  publicLoans.forEach( key => {
+  privateLoans.forEach( key => {
     let val = calcDebtAtGrad(
-      fin['privateLoan_' + key],
+      fin['privLoan_' + key],
       fin['rate_' + key],
       fin.other_programLength,
       0
@@ -146,6 +146,8 @@ function debtCalculator() {
   for ( const key in debts ) {
     fin['debt_' + key] = debts[key];
   }
+
+  console.log( debts );
 
 }
 
