@@ -64,7 +64,6 @@ const _demoData = function() {
 
 const init = function() {
   const body = document.querySelector( 'body' );
-  stateModel.init();
   constantsModel.init();
   expensesModel.init();
   financialModel.init();

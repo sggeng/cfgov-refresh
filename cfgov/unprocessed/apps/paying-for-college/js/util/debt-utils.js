@@ -1,4 +1,3 @@
-
 function calcDebtAtGrad( amount, rate, programLength, deferPeriod ) {
 
   const total = amount * rate / 12 *
@@ -26,4 +25,4 @@ function calcMonthlyPayment( debt, rate, term ) {
 export {
   calcDebtAtGrad,
   calcMonthlyPayment
-}
+};

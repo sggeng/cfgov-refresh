@@ -65,19 +65,19 @@ const financialView = {
    * @param {Object} event - Triggering event
    */
   _handleActionPlanClick: function( event ) {
-    // const target = event.target;
-    // financialView._actionPlanChoices.forEach( elem => {
-    //   elem.classList.remove( 'highlighted' );
-    // } );
+    /* const target = event.target;
+       financialView._actionPlanChoices.forEach( elem => {
+         elem.classList.remove( 'highlighted' );
+       } ); */
 
-    // if ( target.matches( '.m-form-field' ) ) {
-    //   target.classList.add( 'highlighted' );
-    //   target.querySelector( 'input' ).setAttribute( 'checked', true );
-    // } else {
-    //   const div = closest( target, '.m-form-field' );
-    //   div.classList.add( 'highlighted' );
-    //   div.querySelector( 'input' ).setAttribute( 'checked', true );
-    // }
+    /* if ( target.matches( '.m-form-field' ) ) {
+         target.classList.add( 'highlighted' );
+         target.querySelector( 'input' ).setAttribute( 'checked', true );
+       } else {
+         const div = closest( target, '.m-form-field' );
+         div.classList.add( 'highlighted' );
+         div.querySelector( 'input' ).setAttribute( 'checked', true );
+       } */
 
     // financialView._actionPlanSeeSteps.removeAttribute( 'disabled' );
   },
@@ -122,7 +122,7 @@ const financialView = {
   _handleOtherLoanButtonClick: function( event ) {
     const target = event.target;
     const value = target.dataset.borrowButton;
-    console.log( value)
+    console.log( value );
     if ( value === 'privateLoan' ) {
       updateState.byProperty( 'showPrivateLoans', 'yes' );
     } else if ( value === 'gradPlus' ) {
@@ -193,14 +193,14 @@ const financialView = {
         const prop = elem.dataset.financialItem;
         const isRate = prop.substr( 0, 5 ) === 'rate_';
         const isFee = prop.substr( 0, 4 ) === 'fee_';
-        const isNumber = elem.dataset.isNumber ===  'true';
+        const isNumber = elem.dataset.isNumber === 'true';
         let val = getFinancialValue( prop );
         if ( isFee ) {
           val = decimalToPercentString( val, 3 );
         } else if ( isRate ) {
           val = decimalToPercentString( val, 2 );
         } else if ( isNumber ) {
-          val = Math.round( val * 100 ) / 100
+          val = Math.round( val * 100 ) / 100;
         } else {
           val = numberToMoney( { amount: val, decimalPlaces: 0 } );
         }
@@ -232,9 +232,7 @@ const financialView = {
        5 ); */
   },
 
-  /*
-   * init - Initialize the financialView object
-   */
+  /* init - Initialize the financialView object */
   init: function( body ) {
     this._financialItems = document.querySelectorAll( '[data-financial-item]' );
     this._financialInputs = document.querySelectorAll( 'input[data-financial-item]' );

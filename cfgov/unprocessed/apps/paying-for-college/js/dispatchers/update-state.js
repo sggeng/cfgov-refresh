@@ -19,7 +19,7 @@ const updateState = {
       updateMakePlanChart();
     } else if ( item === 'max-debt-guideline' ) {
       updateMaxDebtChart();
-    } else if ( item === ( 'cost-of-borrowing' ) ) {
+    } else if ( item === 'cost-of-borrowing' ) {
       updateCostOfBorrowingChart();
     }
   },
@@ -33,7 +33,7 @@ const updateState = {
   nextSection: () => {
     const i = stateModel.sectionOrder.indexOf( stateModel.values.activeSection );
     if ( i !== -1 ) {
-      const nextSection = stateModel.sectionOrder[ i + 1 ];
+      const nextSection = stateModel.sectionOrder[i + 1];
       updateState.activeSection( nextSection );
     }
   },

@@ -65,7 +65,7 @@ function enforceRange( n, min, max ) {
 
   if ( n < min && min !== false ) {
     n = min;
-    error = 'min'
+    error = 'min';
   }
 
   return {

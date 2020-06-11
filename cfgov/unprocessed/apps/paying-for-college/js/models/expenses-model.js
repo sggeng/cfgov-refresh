@@ -1,4 +1,3 @@
-
 // This file contains the model for after-college expenses
 import { updateExpensesView, updateFinancialView } from '../dispatchers/update-view.js';
 import { getExpenses } from '../dispatchers/get-api-values.js';
@@ -117,7 +116,7 @@ const expensesModel = {
     if ( typeof expensesModel.values.item_childcare === 'undefined' ) {
       expensesModel.values.item_childcare = 0;
     }
-    
+
     expensesModel.calculateTotals();
     setUrlQueryString();
   },

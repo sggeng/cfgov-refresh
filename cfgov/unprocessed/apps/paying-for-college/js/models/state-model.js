@@ -68,7 +68,7 @@ const stateModel = {
   /**
    * setValue - Public method to update model values
    * @param {String} name - the name of the property to update
-   * @param {} value - the value to be assigned
+   * @param {*} value - the value to be assigned
    */
   setValue: function( name, value ) {
     updateStateInDom( name, value );
@@ -86,13 +86,6 @@ const stateModel = {
     }
 
     setUrlQueryString();
-  },
-
-
-  /**
-   * init - Initialize the state model
-   */
-  init: function() {
   }
 
 };

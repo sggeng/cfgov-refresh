@@ -19,9 +19,7 @@ const schoolView = {
   _schoolItems: [],
   _stateItems: [],
 
-  /*
-   * _checkRadioButtonCount: if all radio buttons are clicked, enable the next button
-   */
+  /* _checkRadioButtonCount: if all radio buttons are clicked, enable the next button */
 
   _checkRadioButtonCount: function( ) {
     const checkedCount = schoolView._schoolInfo
@@ -74,7 +72,6 @@ const schoolView = {
 
       // Add schoolData to schoolModel
       updateSchoolData( iped );
-      schoolView
     }
   },
 
@@ -125,7 +122,7 @@ const schoolView = {
     this._schoolItems.forEach( elem => {
 
       const prop = elem.dataset.schoolItem;
-      let val = getSchoolValue( prop );
+      const val = getSchoolValue( prop );
 
       elem.innerText = val;
 
@@ -134,7 +131,7 @@ const schoolView = {
     this._stateItems.forEach( elem => {
 
       const prop = elem.dataset.stateItem;
-      let val = getStateValue( prop );
+      const val = getStateValue( prop );
 
       elem.innerText = val;
 
@@ -152,7 +149,7 @@ const schoolView = {
     schoolView._searchBox.value = getSchoolValue( 'school' );
     schoolView._schoolInfo.classList.add( 'active' );
 
-    buttons.forEach( ( name ) => {
+    buttons.forEach( name => {
       const val = getStateValue( name );
       if ( typeof val !== 'undefined' ) {
         schoolView.clickRadioButton( name, val );
@@ -185,7 +182,7 @@ const schoolView = {
 
     // Initialize listeners
     schoolView._addListeners();
-  },
+  }
 
 };
 

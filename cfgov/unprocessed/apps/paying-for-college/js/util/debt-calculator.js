@@ -13,23 +13,21 @@ import { updateFinancial, updateFinancialsFromSchool } from '../dispatchers/upda
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 
-
-
 function debtCalculator() {
   const fedLoans = [ 'directSub', 'directUnsub' ];
   const plusLoans = [ 'gradPlus', 'parentPlus' ];
   const publicLoans = [ 'state', 'institutional', 'nonprofit' ];
-  const privLoans = [ 'privateLoan1' ]
+  const privLoans = [ 'privateLoan1' ];
   const allLoans = fedLoans.concat( plusLoans, publicLoans, privLoans );
-  let fin = financialModel.values;
-  let debts = {
+  const fin = financialModel.values;
+  const debts = {
     totalAtGrad: 0,
     tenYearTotal: 0,
     tenYearMonthly: 0,
     tenYearInterest: 0,
     twentyFiveYearTotal: 0,
     twentyFiveYearMonthly: 0,
-    twentyFiveYearInterest: 0,
+    twentyFiveYearInterest: 0
   };
 
   // Find federal debts at graduation
@@ -37,10 +35,10 @@ function debtCalculator() {
     // DIRECT Subsidized loans are special
     let val = 0;
     if ( key === 'directSub' ) {
-      val = fin[ 'fedLoan_' + key ] * fin.other_programLength;
+      val = fin['fedLoan_' + key] * fin.other_programLength;
     } else {
-      val = calcDebtAtGrad( fin[ 'fedLoan_' + key ],
-        fin[ 'rate_' + key ], fin.other_programLength, 6 );
+      val = calcDebtAtGrad( fin['fedLoan_' + key],
+        fin['rate_' + key], fin.other_programLength, 6 );
     }
 
     if ( isNaN( val ) ) {
@@ -51,8 +49,8 @@ function debtCalculator() {
 
   plusLoans.forEach( key => {
     let val = calcDebtAtGrad(
-      fin[ 'plusLoan_' + key ],
-      fin[ 'rate_' + key ],
+      fin['plusLoan_' + key],
+      fin['rate_' + key],
       fin.other_programLength,
       6 );
 
@@ -64,13 +62,13 @@ function debtCalculator() {
 
   // calculate debts of other loans
 
-  publicLoans.forEach( ( key ) => {
+  publicLoans.forEach( key => {
     let val = calcDebtAtGrad(
-        fin[ 'publicLoan_' + key],
-        fin[ 'rate_' + key ],
-        fin.other_programLength,
-        0
-      );
+      fin['publicLoan_' + key],
+      fin['rate_' + key],
+      fin.other_programLength,
+      0
+    );
 
     if ( isNaN( val ) ) {
       val = 0;
@@ -79,13 +77,13 @@ function debtCalculator() {
 
   } );
 
-  publicLoans.forEach( ( key ) => {
+  publicLoans.forEach( key => {
     let val = calcDebtAtGrad(
-        fin[ 'privateLoan_' + key],
-        fin[ 'rate_' + key ],
-        fin.other_programLength,
-        0
-      );
+      fin['privateLoan_' + key],
+      fin['rate_' + key],
+      fin.other_programLength,
+      0
+    );
 
     if ( isNaN( val ) ) {
       val = 0;
@@ -95,38 +93,40 @@ function debtCalculator() {
   } );
 
   // 10 year term calculations.
-  allLoans.forEach( ( key ) => {
+  allLoans.forEach( key => {
     debts.totalAtGrad += debts[key];
     let tenYearMonthly = calcMonthlyPayment(
-        debts[key],
-        fin[ 'rate_' + key ],
-        10
-      )
+      debts[key],
+      fin['rate_' + key],
+      10
+    );
 
     if ( isNaN( tenYearMonthly ) ) {
       tenYearMonthly = 0;
     }
-    // debts[ key + '_tenYearMonthly' ] = tenYearMonthly;
-    // debts[ key + '_tenYearTotal' ] = tenYearMonthly * 120;
-    // debts[ key + '_tenYearInterest' ] = (tenYearMonthly * 120 ) - debts[key];
+
+    /* debts[ key + '_tenYearMonthly' ] = tenYearMonthly;
+       debts[ key + '_tenYearTotal' ] = tenYearMonthly * 120;
+       debts[ key + '_tenYearInterest' ] = (tenYearMonthly * 120 ) - debts[key]; */
     debts.tenYearMonthly += tenYearMonthly;
-    debts.tenYearTotal += ( tenYearMonthly * 120 );
+    debts.tenYearTotal += tenYearMonthly * 120;
 
     // 25 year term calculations
     let twentyFiveYearMonthly = calcMonthlyPayment(
-        debts[key],
-        fin[ 'rate_' + key ],
-        10
-      )
+      debts[key],
+      fin['rate_' + key],
+      10
+    );
 
     if ( isNaN( twentyFiveYearMonthly ) ) {
       twentyFiveYearMonthly = 0;
     }
-    // debts[ key + '_twentyFiveYearMonthly' ] = twentyFiveYearMonthly;
-    // debts[ key + '_twentyFiveYearTotal' ] = twentyFiveYearMonthly * 300;
-    // debts[ key + '_twentyFiveYearInterest' ] = ( twentyFiveYearMonthly * 300 ) - debts[key];
+
+    /* debts[ key + '_twentyFiveYearMonthly' ] = twentyFiveYearMonthly;
+       debts[ key + '_twentyFiveYearTotal' ] = twentyFiveYearMonthly * 300;
+       debts[ key + '_twentyFiveYearInterest' ] = ( twentyFiveYearMonthly * 300 ) - debts[key]; */
     debts.twentyFiveYearMonthly += twentyFiveYearMonthly;
-    debts.twentyFiveYearTotal += ( twentyFiveYearMonthly * 300 );
+    debts.twentyFiveYearTotal += twentyFiveYearMonthly * 300;
 
   } );
 
@@ -141,8 +141,8 @@ function debtCalculator() {
 
   // TODO: Toggle for parentPlus debt
 
-  for ( let key in debts ) {
-    fin[ 'debt_' + key] = debts[key];
+  for ( const key in debts ) {
+    fin['debt_' + key] = debts[key];
   }
 
 }

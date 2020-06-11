@@ -9,7 +9,7 @@ import { initializeFinancialValues, recalculateExpenses } from '../dispatchers/u
 import { updateState } from '../dispatchers/update-state.js';
 import { debtCalculator } from '../util/debt-calculator.js';
 import { setUrlQueryString } from '../util/url-parameter-utils.js';
-import { stringToNum, enforceRange } from '../util/number-utils.js';
+import { enforceRange, stringToNum } from '../util/number-utils.js';
 
 // Please excuse some uses of underscore for code/HTML property clarity!
 /* eslint camelcase: ["error", {properties: "never"}] */
@@ -68,43 +68,43 @@ const financialModel = {
    * _calculateTotals - Recalculate all relevant totals
    */
   _calculateTotals: () => {
-    let vals = financialModel.values;
-    let totals = {
-      dirCost : 'total_directCosts',
-      indiCost : 'total_indirectCosts',
-      grant : 'total_grants',
-      scholarship : 'total_scholarships',
-      savings : 'total_savings',
-      fellowAssist : 'total_fellowAssist',
-      income : 'total_income',
-      fedLoan : 'total_fedLoans',
-      publicLoan : 'total_publicLoans',
-      workStudy : 'total_workStudy',
+    const vals = financialModel.values;
+    const totals = {
+      dirCost: 'total_directCosts',
+      indiCost: 'total_indirectCosts',
+      grant: 'total_grants',
+      scholarship: 'total_scholarships',
+      savings: 'total_savings',
+      fellowAssist: 'total_fellowAssist',
+      income: 'total_income',
+      fedLoan: 'total_fedLoans',
+      publicLoan: 'total_publicLoans',
+      workStudy: 'total_workStudy',
       plusLoan: 'total_plusLoans',
       privLoan: 'total_privateLoans'
-    }
+    };
 
     // Reset all totals to 0
-    for ( let key in totals ) {
-      vals[ totals[key] ] = 0;
+    for ( const key in totals ) {
+      vals[totals[key]] = 0;
     }
 
     // Enforce the limits
-    let errors = financialModel._enforceLimits();
+    const errors = financialModel._enforceLimits();
 
     // Calculate totals
     for ( const prop in vals ) {
       const prefix = prop.split( '_' )[0];
       if ( totals.hasOwnProperty( prefix ) ) {
-        vals[ totals[prefix] ] += vals[prop];
+        vals[totals[prefix]] += vals[prop];
       }
     }
 
     // Calculate more totals
-    vals.total_borrowing = vals.total_fedLoans + vals.total_publicLoans + vals.total_privateLoans
-        + vals.total_plusLoans;
-    vals.total_contributions = vals.total_grants + vals.total_scholarships + vals.total_savings
-        + vals.total_workStudy;
+    vals.total_borrowing = vals.total_fedLoans + vals.total_publicLoans + vals.total_privateLoans +
+        vals.total_plusLoans;
+    vals.total_contributions = vals.total_grants + vals.total_scholarships + vals.total_savings +
+        vals.total_workStudy;
     vals.total_costs = vals.total_directCosts + vals.total_indirectCosts + vals.otherCost_additional;
     vals.total_grantsScholarships = vals.total_grants + vals.total_scholarships;
     vals.total_otherResources = vals.total_savings + vals.total_income;
@@ -125,11 +125,9 @@ const financialModel = {
 
   },
 
-  /*
-   * _enforceLimits - Check and enforce various limits on federal loans
-   * and grants
-   * @returns {Object} An object of errors found during enforcement
-   */
+  /* _enforceLimits - Check and enforce various limits on federal loans
+     and grants
+     @returns {Object} An object of errors found during enforcement */
   _enforceLimits: () => {
     // Determine unsubsidized cap based on status
     let unsubCapKey = 'unsubsidizedCapYearOne';
@@ -145,10 +143,10 @@ const financialModel = {
       fedLoan_directSub: [ 0, getConstantsValue( 'subsidizedCapYearOne' ) ],
       fedLoan_directUnsub: [ 0, getConstantsValue( unsubCapKey ) ]
     };
-    let errors = {};
+    const errors = {};
 
-    for ( let key in limits ) {
-      const result = enforceRange( financialModel.values[key], limits[key][0], limits[key][1] );      
+    for ( const key in limits ) {
+      const result = enforceRange( financialModel.values[key], limits[key][0], limits[key][1] );
       financialModel.values[key] = result.value;
       if ( result.error !== false ) {
         errors[key] = result.error;
@@ -163,16 +161,15 @@ const financialModel = {
    * _updateStateWithFinancials: Based on financial situation, update the application state
    */
   _updateStateWithFinancials: () => {
-    updateState.byProperty( 'uncoveredCosts', 
+    updateState.byProperty( 'uncoveredCosts',
       ( financialModel.values.total_gap > 0 ).toString() );
 
-    updateState.byProperty( 'excessFunding', 
+    updateState.byProperty( 'excessFunding',
       ( financialModel.values.total_funding > financialModel.values.total_costs ).toString() );
 
-    updateState.byProperty( 'debtRuleViolation', 
+    updateState.byProperty( 'debtRuleViolation',
       ( financialModel.values.debt_totalAtGrad > financialModel.values.salary_annual ).toString() );
   },
-
 
 
   /**
