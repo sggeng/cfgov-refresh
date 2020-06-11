@@ -25,7 +25,7 @@ function getQueryVariables() {
    querystring
    @returns {String} a formatted query string based on model values */
 
-function _buildUrlQueryString() {
+function buildUrlQueryString() {
   const expensesValues = expensesModel.values;
   const financialValues = financialModel.values;
   const schoolValues = schoolModel.values;
@@ -139,13 +139,7 @@ function _buildUrlQueryString() {
 
 }
 
-/* setUrlQueryString - Replaces current state, adding the formatted querystring as the URL */
-
-function setUrlQueryString() {
-  window.history.replaceState( stateModel.values, null, _buildUrlQueryString() );
-}
-
 export {
-  getQueryVariables,
-  setUrlQueryString
+  buildUrlQueryString,
+  getQueryVariables
 };

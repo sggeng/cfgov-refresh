@@ -5,8 +5,7 @@
 */
 
 import { bindEvent } from '../../../../js/modules/util/dom-events';
-import { setUrlQueryString } from '../util/url-parameter-utils.js';
-import { updateNavigationView, updateSchoolItems, updateStateInDom } from '../dispatchers/update-view.js';
+import { updateUrlQueryString, updateNavigationView, updateSchoolItems, updateStateInDom } from '../dispatchers/update-view.js';
 
 const stateModel = {
   stateDomElem: null,
@@ -74,6 +73,7 @@ const stateModel = {
     updateStateInDom( name, value );
     if ( name !== 'activeSection' ) {
       stateModel.values[name] = value;
+      updateUrlQueryString();
     } else if ( value !== stateModel.values.activeSection ) {
       stateModel.values.activeSection = value;
       window.history.pushState( stateModel.values, null, '' );
@@ -84,8 +84,6 @@ const stateModel = {
       stateModel.values[key] = stateModel.textVersions[name][value];
       updateSchoolItems();
     }
-    
-    setUrlQueryString();
   }
 
 };

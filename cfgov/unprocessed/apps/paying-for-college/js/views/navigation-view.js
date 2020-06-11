@@ -4,7 +4,6 @@ import { closest } from '../../../../js/modules/util/dom-traverse';
 import { updateState } from '../dispatchers/update-state.js';
 import { bindEvent } from '../../../../js/modules/util/dom-events';
 import { getAllStateValues, getStateValue } from '../dispatchers/get-model-values.js';
-import { updateAppView } from '../dispatchers/update-view.js';
 
 const navigationView = {
   _contentSidebar: null,
@@ -85,7 +84,6 @@ const navigationView = {
       updateState.activeSection( event.state.activeSection );
     }
     navigationView.updateView();
-    updateAppView();
   },
 
   /**

@@ -47,7 +47,7 @@ const updateState = {
   /**
    * Update the stateModel's property to be equal to value
    * @param {String} prop - The property to update
-   * @param {} value - The value to assign
+   * @param {*} value - The value to assign
    */
   byProperty: function( prop, value ) {
     stateModel.setValue( prop, value );

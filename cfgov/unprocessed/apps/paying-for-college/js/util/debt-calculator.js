@@ -147,8 +147,6 @@ function debtCalculator() {
     fin['debt_' + key] = debts[key];
   }
 
-  console.log( debts );
-
 }
 
 

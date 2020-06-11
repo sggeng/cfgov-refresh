@@ -6,9 +6,9 @@ based on these costs.
 
 import { getConstantsValue, getSchoolValue, getStateValue } from '../dispatchers/get-model-values.js';
 import { initializeFinancialValues, recalculateExpenses } from '../dispatchers/update-models.js';
+import { updateUrlQueryString } from '../dispatchers/update-view.js';
 import { updateState } from '../dispatchers/update-state.js';
 import { debtCalculator } from '../util/debt-calculator.js';
-import { setUrlQueryString } from '../util/url-parameter-utils.js';
 import { enforceRange, stringToNum } from '../util/number-utils.js';
 
 // Please excuse some uses of underscore for code/HTML property clarity!
@@ -60,7 +60,7 @@ const financialModel = {
     if ( financialModel.values.hasOwnProperty( name ) ) {
       financialModel.values[name] = stringToNum( value );
       financialModel.recalculate();
-      setUrlQueryString();
+      updateUrlQueryString();
     }
   },
 

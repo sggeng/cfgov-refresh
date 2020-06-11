@@ -1,12 +1,12 @@
 // This model contains school information
-import { setUrlQueryString } from '../util/url-parameter-utils.js';
+import { updateUrlQueryString } from '../dispatchers/update-view.js';
 
 const schoolModel = {
   values: {},
 
   setValue: function( name, value ) {
     schoolModel.values[name] = value;
-    setUrlQueryString();
+    updateUrlQueryString();
   }
 
 };

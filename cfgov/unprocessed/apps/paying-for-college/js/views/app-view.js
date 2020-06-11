@@ -4,6 +4,9 @@ other views. */
 
 import { bindEvent } from '../../../../js/modules/util/dom-events';
 import { closest } from '../../../../js/modules/util/dom-traverse';
+import { buildUrlQueryString } from '../util/url-parameter-utils.js';
+import { getAllStateValues } from '../dispatchers/get-model-values.js';
+
 
 const appView = {
   _didThisHelpBtns: null,
@@ -28,20 +31,18 @@ const appView = {
   _handleDidThisHelpBtns: event => {
     const button = event.target;
     const parent = closest( button, '.m-btn-group' );
-    button.classList.remove( 'a-btn__disabled')
+    button.classList.remove( 'a-btn__disabled');
     parent.querySelectorAll( 'button:not( [value="' + button.value + '"]' )
       .forEach( elem => {
         elem.classList.add( 'a-btn__disabled' );
       } );
-      
-    console.log( event.target.value );
   },
 
   /**
    * Update the link on the save and finish page with the current url
    */
   _updateSaveLink: () => {
-    appView._finishLink.value = window.location.href;
+    appView._finishLink.innerText = window.location.href;
   },
 
   /**
@@ -52,16 +53,24 @@ const appView = {
   },
 
   /**
+   * Replaces current state, adding the formatted querystring as the URL
+   */
+  setUrlQueryString: () => {
+    window.history.replaceState( getAllStateValues(), null, buildUrlQueryString() );
+    appView._updateSaveLink();
+  },
+
+  /**
    * Initialize the View
    */
-   init: () => {
+  init: () => {
     appView._didThisHelpBtns = document.querySelectorAll( '#save_did-it-help button, #save_understand-loans button' );
     appView._finishLink = document.querySelector( '#finish_link' );
 
     appView._addButtonListeners();
-   }
+  }
 };
 
 export {
   appView
-}
+};

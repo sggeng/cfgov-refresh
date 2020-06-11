@@ -14,7 +14,14 @@ import { schoolView } from '../views/school-view.js';
  */
 const updateAppView = () => {
   appView.updateView();
-}; 
+};
+
+/**
+ * Update the URL query string to contain app/financial information
+ */
+const updateUrlQueryString = () => {
+  appView.setUrlQueryString();
+};
 
 /**
  * updateExpensesView - updates the expensesView
@@ -99,5 +106,6 @@ export {
   updateMaxDebtChart,
   updateAffordingChart,
   updateGradMeterChart,
-  updateRepaymentMeterChart
+  updateRepaymentMeterChart,
+  updateUrlQueryString
 };
