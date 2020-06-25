@@ -602,14 +602,18 @@ FLAGS = {
     # When enabled, spelling suggestions will appear in Ask CFPB search and
     # will be used when the given search term provides no results
     "ASK_SEARCH_TYPOS": [],
+
     # Beta banner, seen on beta.consumerfinance.gov
     # When enabled, a banner appears across the top of the site proclaiming
     # "This beta site is a work in progress."
-    "BETA_NOTICE": [("environment is", "beta")],
+    "BETA_NOTICE": [{"condition": "environment is", "value": "beta"}],
+
     # When enabled, include a recruitment code comment in the base template
     "CFPB_RECRUITING": [],
+
     # When enabled, display a "technical issues" banner on /complaintdatabase
     "CCDB_TECHNICAL_ISSUES": [],
+
     # When enabled, display a banner stating the complaint intake form is down
     "COMPLAINT_INTAKE_TECHNICAL_ISSUES": [
         {
@@ -620,6 +624,7 @@ FLAGS = {
         # Boolean to turn it off explicitly unless enabled by another condition
         {"condition": "boolean", "value": False},
     ],
+
     # When enabled, display a banner stating that the complaint intake form is
     # offline for maintenance. A combination of 'after date'/'before date'
     # conditions is expected.
@@ -632,35 +637,53 @@ FLAGS = {
         # Boolean to turn it off explicitly unless enabled by another condition
         {"condition": "boolean", "value": False},
     ],
+
     # Fix for margin-top when using the text inset
     # When enabled, the top margin of full-width text insets is increased
     "INSET_TEST": [],
+
     # The next version of the public consumer complaint database
     "CCDB5_RELEASE": [],
+
     # The Trends feature inside Consumer Complaints
     "CCDB5_TRENDS": [],
+
     # Google Optimize code snippets for A/B testing
     # When enabled this flag will add various Google Optimize code snippets.
     # Intended for use with path conditions.
     "AB_TESTING": [],
+
     # Email popups.
-    "EMAIL_POPUP_OAH": [("boolean", True)],
-    "EMAIL_POPUP_DEBT": [("boolean", True)],
+    "EMAIL_POPUP_OAH": [{"condition": "boolean", "value": True}],
+    "EMAIL_POPUP_DEBT": [{"condition": "boolean", "value": True}],
+
     # Search.gov API-based site-search
     "SEARCH_DOTGOV_API": [],
+
     # Turbolinks is a JS library that speeds up page loads
     # https://github.com/turbolinks/turbolinks
     "TURBOLINKS": [],
+
     # Ping google on page publication in production only
-    "PING_GOOGLE_ON_PUBLISH": [("environment is", "production")],
+    "PING_GOOGLE_ON_PUBLISH": [
+        {"condition": "environment is", "value": "production"}
+    ],
+
     # SPLIT TESTING FLAGS
     # Ask CFPB page titles as H1s instead of H2s
-    "ASK_CFPB_H1": [("in split testing cluster", "ASK_CFPB_H1")],
+    "ASK_CFPB_H1": [
+        {"condition": "in split testing cluster", "value": "ASK_CFPB_H1"}
+    ],
+
     # Test financial well-being hub pages on Beta
-    "FINANCIAL_WELLBEING_HUB": [("environment is", "beta")],
+    "FINANCIAL_WELLBEING_HUB": [
+        {"condition": "environment is", "value": "beta"}
+    ],
+
     # Publish new HMDA Explore page
     # Delete after HMDA API is deprecated (hopefully Summer 2019)
     "HMDA_LEGACY_PUBLISH": [],
+
     # The HMDA API and HMDA explorer pages will temporarily be taken down at
     # TBD intervals. We use a GET parameter during downtime to trigger an
     # explanatory banner about the outages.
@@ -677,12 +700,16 @@ FLAGS = {
     # Controls the /beta_external_testing endpoint, which Jenkins jobs
     # query to determine whether to refresh Beta database.
     "BETA_EXTERNAL_TESTING": [],
+
     # Used to hide new youth employment success pages prior to public launch
     "YOUTH_EMPLOYMENT_SUCCESS": [],
+
     # Release of prepaid agreements database search
     "PREPAID_AGREEMENTS_SEARCH": [],
+
     # Used to hide CCDB landing page updates prior to public launch
     "CCDB_CONTENT_UPDATES": [],
+
     # During a Salesforce system outage, the following flag should be enabled
     # to alert users that the Collect community is down.
     "COLLECT_OUTAGE": [
@@ -697,6 +724,7 @@ FLAGS = {
         # Boolean to turn it off explicitly unless enabled by another condition
         {"condition": "boolean", "value": False},
     ],
+
     # During a Salesforce system outage, the following flag
     # should be enabled to alert users that
     # the OMWI assessment form and inclusivity portal are down.
@@ -712,6 +740,7 @@ FLAGS = {
         # Boolean to turn it off explicitly unless enabled by another condition
         {"condition": "boolean", "value": False},
     ],
+
     # Controls whether or not to include Qualtrics Web Intercept code for the
     # Q42020 Ask CFPB customer satisfaction survey.
     "ASK_SURVEY_INTERCEPT": [],
