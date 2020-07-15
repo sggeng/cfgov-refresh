@@ -185,6 +185,7 @@ const navigationView = {
    * NOTE: if the value is null or the Boolean 'false', the data attribute will be removed
    */
   updateStateInDom: function( property, value ) {
+    if ( navigationView._stateDomElem === null ) return;
     if ( value === false || value === null ) {
       navigationView._stateDomElem.removeAttribute( 'data-state_' + property );
     } else {

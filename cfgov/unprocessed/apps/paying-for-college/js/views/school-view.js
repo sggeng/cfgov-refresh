@@ -97,16 +97,18 @@ const schoolView = {
     } else {
       button = closest( target, 'BUTTON' );
     }
+    const iped = button.dataset.school_id;
 
     // Clear pid from state
     updateState.byProperty( 'pid', false );
 
     // If there's a school_id, then proceed with schoolInfo
-    if ( typeof button.dataset.school_id !== 'undefined' ) {
-      const iped = button.dataset.school_id;
-
+    if ( typeof iped !== 'undefined' ) {
       // Add schoolData to schoolModel
       updateSchoolData( iped );
+
+      // Update schoolSelected state property
+      updateState.byProperty( 'schoolSelected', )
     }
   },
 

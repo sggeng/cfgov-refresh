@@ -8,8 +8,7 @@ import { closest } from '../../../../js/modules/util/dom-traverse';
 import { getAllStateValues } from '../dispatchers/get-model-values.js';
 import { recalculateFinancials } from '../dispatchers/update-models.js';
 import { sendAnalyticsEvent } from '../util/analytics.js';
-import { updateFinancialViewAndFinancialCharts } from '../dispatchers/update-view.js';
-
+import { updateFinancialViewAndFinancialCharts, updateStateInDom } from '../dispatchers/update-view.js';
 
 const appView = {
   _actionPlanChoices: null,
@@ -105,6 +104,20 @@ const appView = {
     } );
   },
 
+    /**
+   * Checks all values of stateModel and updates the non-false ones in the
+   * DOM. Generally for use when the application starts.
+   */
+  _updateAllStateValuesInDom: function() {
+    const stateValues = getAllStateValues();
+    for ( let key in stateValues ) {
+      const val = stateValues[key];
+      if ( val !== false ) {
+        updateStateInDom( key, val );
+      }
+    }
+  },
+
   /**
    * Public method for updating this view
    */
@@ -133,6 +146,7 @@ const appView = {
     appView._includeParentPlusBtn = document.querySelector( '#plan__parentPlusFeeRepay' );
 
     appView._addButtonListeners();
+    appView._updateAllStateValuesInDom();
   }
 };
 

@@ -265,7 +265,6 @@ const financialModel = {
       ( financialModel.values.debt_totalAtGrad > financialModel.values.salary_annual ).toString() );
   },
 
-
   /**
    * Import financial values from the schoolModel based on stateModel
    */

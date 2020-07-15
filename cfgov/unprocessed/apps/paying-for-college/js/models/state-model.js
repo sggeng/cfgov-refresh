@@ -13,7 +13,7 @@ const stateModel = {
   values: {
     activeSection: false,
     constantsLoaded: false,
-    schoolSelected: false,
+    schoolSelected: "none",
     gotStarted: false,
     gradMeterCohort: 'cohortRankByHighestDegree',
     gradMeterCohortName: 'U.S.',
@@ -83,7 +83,7 @@ const stateModel = {
 
   /**
    * replaceStateInHistory - Replace current application state in window.history
-   * @param {String} queryString - The queryString to put in the history object
+   * @param {string} queryString - The queryString to put in the history object
    */
   replaceStateInHistory: queryString => {
     const historyState = {
@@ -95,8 +95,8 @@ const stateModel = {
 
   /**
    * setValue - Public method to update model values
-   * @param {String} name - the name of the property to update
-   * @param {*} value - the value to be assigned
+   * @param {string} name - the name of the property to update
+   * @param {string|number|boolean} value - the value to be assigned
    */
   setValue: function( name, value ) {
     updateStateInDom( name, value );
