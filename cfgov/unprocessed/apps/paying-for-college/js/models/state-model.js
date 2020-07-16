@@ -3,7 +3,7 @@
  * which tracks the current app state and allows the views to update based on
  * state.
 */
-import { getProgramInfo } from '../dispatchers/get-model-values.js';
+import { getProgramInfo, getSchoolValue } from '../dispatchers/get-model-values.js';
 import { recalculateFinancials } from '../dispatchers/update-models.js';
 import { updateFinancialViewAndFinancialCharts, updateNavigationView, updateSchoolItems, updateStateInDom, updateUrlQueryString } from '../dispatchers/update-view.js';
 import { bindEvent } from '../../../../js/modules/util/dom-events';
@@ -12,19 +12,23 @@ const stateModel = {
   stateDomElem: null,
   values: {
     activeSection: false,
+    advancedPastSearch: false,
     constantsLoaded: false,
-    schoolSelected: "none",
+    costsQuestion: false,
     gotStarted: false,
     gradMeterCohort: 'cohortRankByHighestDegree',
     gradMeterCohortName: 'U.S.',
-    costsQuestion: false,
-    programType: false,
-    programLength: false,
-    programLevel: false,
-    programRate: false,
-    programHousing: false,
+    pid: false,
+    programHousing: 'not-selected',
+    programLength: 'not-selected',
+    programLevel: 'not-selected',
+    programRate: 'not-selected',
+    programType: 'not-selected',
+    programStudentType: 'not-selected',
     repayMeterCohort: 'cohortRankByHighestDegree',
-    repayMeterCohortName: 'U.S.'
+    repayMeterCohortName: 'U.S.',
+    salaryAvailable: "no",
+    schoolSelected: "none"
   },
   textVersions: {
     programType: {
@@ -99,36 +103,15 @@ const stateModel = {
    * @param {string|number|boolean} value - the value to be assigned
    */
   setValue: function( name, value ) {
-    updateStateInDom( name, value );
+    // In case this method gets used to update activeSection...
     if ( name === 'activeSection' ) {
-      // In case this method gets used to update activeSection...
       stateModel.setActiveSection( value );
-    } else {
-      stateModel.values[name] = value;
-      updateUrlQueryString();
     }
-    if ( stateModel.textVersions.hasOwnProperty( name ) ) {
-      const key = name + 'Text';
-      stateModel.values[key] = stateModel.textVersions[name][value];
-      updateSchoolItems();
-    }
+    stateModel.values[name] = value;
+    updateStateInDom( name, value );
 
-    // When the meter buttons are clicked, updateSchoolItems
-    if ( name.indexOf( 'MeterThird' ) > 0 ) {
-      updateSchoolItems();
-    }
-
-    // When program values are updated, recalculate, updateView
-    if ( name.indexOf( 'program' ) === 0 ) {
-      if ( name === 'programType' && value === 'graduate' ) {
-        stateModel.setValue( 'programLevel', 'graduate' );
-      } else if ( name === 'programType' ) {
-        stateModel.setValue( 'programLevel', 'undergrad' );
-      }
-
-      recalculateFinancials();
-      updateFinancialViewAndFinancialCharts();
-    }
+    stateModel._updateApplicationState( name );
+    console.log( 'setValue: ', name, value );
   },
 
   /**
@@ -144,6 +127,104 @@ const stateModel = {
       stateModel.pushStateToHistory();
     }
     updateNavigationView();
+  },
+
+  /**
+   * Check whether required fields are selected
+   */
+  _checkRequiredFields: () => {
+    // Only change error state if the user has advanced or attempts to advance
+    // past the search page.
+    if ( !advancedPastSearch ) {
+      const smv = stateModel.values;
+      const control = getSchoolValue( 'control' );
+
+      const requiredErrors = {
+        schoolHasBeenSelected: ( smv.schoolSelected === 'none' ),
+        housingSelected: smv.programHousing === 'not-selected',
+        lengthSelected: smv.programLength === 'not-selected',
+        typeSelected: smv.programType === 'not-selected',
+        dependencySelected: smv.programType === 'undergrad' && smv.dependencySelected === 'not-selected',
+        rateSelected: smv.programRate === 'not-selected' && control === 'Public'
+      };
+
+      // Change values to "required" which triggers error notification CSS rules
+      for ( let key in requiredErrors ) {
+        if ( requiredErrors[key] === true ) {
+          stateModel.values[key] = 'required';
+          updateStateInDom( key, 'required' );
+        }
+      }
+    }
+  },
+
+  /**
+   * set the salaryAvailable property based on other values
+   */
+  _setSalaryAvailable: () => {
+    let available = "yes";
+    const smv = stateModel.values
+    if ( smv.programLevel === 'graduate' && smv.pid === false ) {
+      available = "no";
+    }
+    stateModel.values.salaryAvailable = available;
+    updateStateInDom( 'salaryAvailable', available );
+    console.log( 'salaryAvailable set to "' + available + '".' );
+  },
+
+  /**
+   * set programLevel property based on programType
+   */
+   _setProgramLevel: () => {
+    const programType = stateModel.values.programType;
+    let programLevel = 'undergrad';
+    if ( programType === 'graduate' ) {
+      programLevel = 'graduate';
+    }
+
+    stateModel.values.programLevel = programLevel;
+    updateStateInDom( 'programLevel', programLevel );
+   },
+
+  /**
+   * update the application state based on the 'property' parameter.
+   * @param {string} property - What property to update based on
+   */
+  _updateApplicationState: ( property ) => {
+    const urlParams = [ 'pid', 'programHousing','programType', 'programLength',
+      'programRate', 'programStudentType', 'costsQuestion', 'expensesRegion',
+      'impactOffer', 'impactLoans', 'utmSource', 'utm_medium', 'utm_campaign' ];
+
+    const finUpdate = [ 'programType', 'programRate', 'programStudentType',
+      'programLength', 'programHousing' ];
+
+    // Properties which require a URL querystring update:
+    if ( urlParams.indexOf( property ) > -1 ) {
+      updateUrlQueryString();
+    }
+
+    // Properties which require a financialModel and financialView update:
+    if ( finUpdate.indexOf( property ) > -1 ) {
+      recalculateFinancials();
+      updateFinancialViewAndFinancialCharts();
+    }
+
+    if ( stateModel.textVersions.hasOwnProperty( property ) ) {
+      const value = stateModel.values[property];
+      const key = property + 'Text';
+      stateModel.values[key] = stateModel.textVersions[property][value];
+      updateSchoolItems();
+    }
+
+    // When the meter buttons are clicked, updateSchoolItems
+    if ( property.indexOf( 'MeterThird' ) > 0 ) {
+      updateSchoolItems();
+    }
+
+    // Update state values which are based on other values
+    stateModel._setProgramLevel();
+    stateModel._setSalaryAvailable();
+    stateModel._checkRequiredFields();
   }
 
 };

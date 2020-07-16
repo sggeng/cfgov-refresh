@@ -203,5 +203,13 @@
                 })
             }}
         </div>
+        <div not-data-based-visibility="school-selection-error">
+            {{ notification.render(
+                'error',
+                true,
+                '',
+                'If you are entering or continuing an accelerated degree program (a bachelor’s followed by a master’s in the same subject), choose the program type covered by this financial aid offer.'
+            ) }}
+        </div>
     </div>
 </section>  

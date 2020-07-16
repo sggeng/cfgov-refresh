@@ -263,7 +263,7 @@
                         })
                     }}
                 </div>
-                <div data-state-based-visibility="no-program-selected">
+                <div data-state-based-visibility="no-salary-available">
                     {{
                         text_item.render({
                             'label': 'Median first-year salary of this program\'s graduates',
@@ -324,7 +324,7 @@
                         })
                     }}
                 </div>
-                <div class="undergrad-content">
+                <div class="undergrad-content" data-state-based-visibility="salary-is-available">
                     {{
                         text_item.render({
                             'label': 'Median monthly salary of this school\'s recent students',
@@ -334,7 +334,7 @@
                         })
                     }}
                 </div>
-                <div data-state-based-visibility="no-program-selected">
+                <div data-state-based-visibility="no-salary-available">
                     {{
                         text_item.render({
                             'label': 'Median monthly first-year salary of this program\'s graduates',

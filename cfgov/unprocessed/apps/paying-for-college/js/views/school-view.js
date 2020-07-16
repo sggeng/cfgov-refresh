@@ -82,10 +82,12 @@ const schoolView = {
     let pid = target.value;
     if ( pid === 'null' ) {
       pid = false;
+    } else {
+      updateState.byProperty( 'pid', pid );
+      updateState.byProperty( 'programName', programName );
+      updateFinancial( 'salary_annual', salary );
+      updateState.byProperty( 'salaryAvailable', 'yes' );
     }
-    updateState.byProperty( 'pid', pid );
-    updateState.byProperty( 'programName', programName );
-    updateFinancial( 'salary_annual', salary );
   },
 
   _handleResultButtonClick: function( event ) {
@@ -108,7 +110,7 @@ const schoolView = {
       updateSchoolData( iped );
 
       // Update schoolSelected state property
-      updateState.byProperty( 'schoolSelected', )
+      updateState.byProperty( 'schoolSelected', iped );
     }
   },
 
@@ -122,6 +124,10 @@ const schoolView = {
     updateState.byProperty( prop, value );
     if ( prop === 'programType' ) {
       schoolView._updateProgramList();
+
+      if ( value !== 'graduate' ) {
+        updateState.byProperty( 'salaryAvailable', 'yes' );
+      }
     }
   },
 
@@ -174,6 +180,9 @@ const schoolView = {
       updateState.byProperty( 'schoolHasPrograms', 'yes' );
     } else {
       updateState.byProperty( 'schoolHasPrograms', 'no' );
+      if ( level === 'graduate' ) {
+        updateState.byProperty( 'salaryAvailable', 'no' );
+      }
     }
 
     if ( list.length > 0 ) {

@@ -168,24 +168,40 @@ main.college-costs {
 			display: inline;
 		}
 	}
-	
+
+	// Salary data available toggles
+	&[data-state_salaryavailable="no"] {
+		[data-state-based-visibility="no-salary-available"] {
+			display: block;
+		}
+		span[data-state-based-visibility="no-salary-available"] {
+			display: inline;
+		}
+		// Don't display the choice for affording section
+		.college-costs_tool-section.college-costs_tool-section__affording .affording-loans-choices {
+			display: none;
+		}
+		[data-state-based-visibility="expenses-hourly-wages"] {
+			display: block;
+		}
+		.debt-guideline_salary-info {
+			display: none;
+		}
+	}
+	&[data-state_salaryavailable="yes"] {
+		[data-state-based-visibility="salary-is-available"] {
+			display: block;
+		}
+		span[data-state-based-visibility="salary-is-available"] {
+			display: inline;
+		}
+	}
 	&[data-state_programtype="graduate"]:not( [data-state_pid] ) {
 		[data-state-based-visibility="no-program-selected"] {
 			display: block;
 		}
 		span[data-state-based-visibility="no-program-selected"] {
 			display: inline;
-		}
-
-		.college-costs_tool-section.college-costs_tool-section__affording .affording-loans-choices {
-			display: none;
-		}
-
-		[data-state-based-visibility="expenses-hourly-wages"] {
-			display: block;
-		}
-		.debt-guideline_salary-info {
-			display: none;
 		}
 	}
 
