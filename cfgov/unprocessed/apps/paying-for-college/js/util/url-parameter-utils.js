@@ -46,7 +46,7 @@ function buildUrlQueryString() {
     'typp': stateValues.programType,
     'lenp': stateValues.programLength,
     'ratp': stateValues.programRate,
-    'depp': stateValues.programStudentType,
+    'depp': stateValues.programDependency,
     'cobs': stateValues.costsQuestion,
     'regs': stateValues.expensesRegion,
     'iqof': stateValues.impactOffer,
@@ -127,6 +127,26 @@ function buildUrlQueryString() {
     dbtx: expensesValues.item_currentDebt
   };
 
+  const expensesKeys = {
+    houx: 'item_housing',
+    fdx: 'item_food',
+    clhx: 'item_clothing',
+    trnx: 'item_transportation',
+    hltx: 'item_healthcare',
+    entx: 'item_entertainment',
+    retx: 'item_retirement',
+    taxx: 'item_taxes',
+    othx: 'item_other',
+  }
+
+  // Check expenses values to see if they are the same as the default:
+  for ( let key in expensesKeys ) {
+    const prop = expensesKeys[key];
+    if ( expensesValues[prop] === expensesValues['bls_' + prop] ) {
+      delete expensesVariables[key];
+    }
+  }
+
   if ( stateValues.programLevel === 'graduate' ) {
     variables.plus = financialValues.plusLoan_gradPlus;
   }
@@ -140,7 +160,8 @@ function buildUrlQueryString() {
 
   for ( const key in variables ) {
     if ( typeof variables[key] !== 'undefined' && variables[key] !== 0 &&
-                variables[key] !== null && variables[key] !== false ) {
+                variables[key] !== null && variables[key] !== false &&
+                variables[key] !== 'not-selected' && variables[key] !== 'required' ) {
       if ( query.length > 1 ) query += '&';
       query += key + '=' + variables[key];
     }

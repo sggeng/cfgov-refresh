@@ -22,7 +22,7 @@ const _urlParamsToModelVars = {
   'typp': 'stateModel.programType',
   'lenp': 'stateModel.programLength',
   'ratp': 'stateModel.programRate',
-  'depp': 'stateModel.programStudentType',
+  'depp': 'stateModel.programDependency',
   'cobs': 'stateModel.costsQuestion',
   'regs': 'stateModel.expensesRegion',
   'iqof': 'stateModel.impactOffer',
@@ -201,7 +201,13 @@ const updateSchoolData = function( iped ) {
         // Some values must migrate to the financial model
         financialModel.setValue( 'salary_annual', stringToNum( getSchoolValue( 'medianAnnualPay6Yr' ) ) );
 
+        // Update schoolSelected in stateModel:
+        stateModel.setValue( 'schoolSelected', iped );
+
         updateSchoolView();
+
+        // Update expenses based on school region
+        expensesModel.setValuesByRegion( schoolModel.values.region );
 
         resolve( true );
 
@@ -267,6 +273,7 @@ function updateModelsFromQueryString( queryObj ) {
         financialModel.setValue( 'other_programLength', stringToNum( queryObj[key] ), false );
       }
     }
+
   }
 
   // If there's an iped, do a fetch of the schoolData

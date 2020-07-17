@@ -124,10 +124,6 @@ const schoolView = {
     updateState.byProperty( prop, value );
     if ( prop === 'programType' ) {
       schoolView._updateProgramList();
-
-      if ( value !== 'graduate' ) {
-        updateState.byProperty( 'salaryAvailable', 'yes' );
-      }
     }
   },
 
@@ -206,7 +202,7 @@ const schoolView = {
   _updateSchoolRadioButtons: () => {
     const campus = getSchoolValue( 'onCampusAvail' );
     const control = getSchoolValue( 'Public' );
-    const buttons = [ 'programLength', 'programType', 'programHousing', 'programRate', 'programStudentType' ];
+    const buttons = [ 'programLength', 'programType', 'programHousing', 'programRate', 'programDependency' ];
 
 
     schoolView._searchResults.classList.remove( 'active' );

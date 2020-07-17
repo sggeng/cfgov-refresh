@@ -20,21 +20,22 @@ import { updateState } from './dispatchers/update-state.js';
  */
 const init = function() {
   const body = document.querySelector( 'body' );
-  constantsModel.init();
-  expensesModel.init();
   financialModel.init();
 
-  schoolView.init( body );
-  expensesView.init( body );
-  financialView.init( body );
-  navigationView.init( body );
-  chartView.init( body );
-  appView.init();
-  Expandable.init();
+  Promise.all( [ expensesModel.init(), constantsModel.init() ] )
+    .then( (vals ) => {
+      schoolView.init( body );
+      expensesView.init( body );
+      financialView.init( body );
+      navigationView.init( body );
+      chartView.init( body );
+      appView.init();
+      Expandable.init();
 
-  updateModelsFromQueryString( getQueryVariables() );
+      updateModelsFromQueryString( getQueryVariables() );
 
-  financialView.updateFinancialItems();
+      financialView.updateFinancialItems();
+    } );
 
 };
 

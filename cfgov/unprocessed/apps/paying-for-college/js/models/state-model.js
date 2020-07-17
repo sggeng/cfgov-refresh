@@ -12,7 +12,6 @@ const stateModel = {
   stateDomElem: null,
   values: {
     activeSection: false,
-    advancedPastSearch: false,
     constantsLoaded: false,
     costsQuestion: false,
     gotStarted: false,
@@ -24,11 +23,13 @@ const stateModel = {
     programLevel: 'not-selected',
     programRate: 'not-selected',
     programType: 'not-selected',
-    programStudentType: 'not-selected',
+    programDependency: 'not-selected',
     repayMeterCohort: 'cohortRankByHighestDegree',
     repayMeterCohortName: 'U.S.',
-    salaryAvailable: "no",
-    schoolSelected: "none"
+    salaryAvailable: 'no',
+    schoolErrors: 'yes',
+    schoolSelected: 'none',
+    showschoolErrors: 'no'
   },
   textVersions: {
     programType: {
@@ -111,7 +112,6 @@ const stateModel = {
     updateStateInDom( name, value );
 
     stateModel._updateApplicationState( name );
-    console.log( 'setValue: ', name, value );
   },
 
   /**
@@ -133,28 +133,33 @@ const stateModel = {
    * Check whether required fields are selected
    */
   _checkRequiredFields: () => {
-    // Only change error state if the user has advanced or attempts to advance
-    // past the search page.
-    if ( !advancedPastSearch ) {
-      const smv = stateModel.values;
-      const control = getSchoolValue( 'control' );
+    const smv = stateModel.values;
+    const control = getSchoolValue( 'control' );
+    stateModel.values['schoolErrors'] = 'no';
+    updateStateInDom( 'schoolErrors', 'no' );
 
-      const requiredErrors = {
-        schoolHasBeenSelected: ( smv.schoolSelected === 'none' ),
-        housingSelected: smv.programHousing === 'not-selected',
-        lengthSelected: smv.programLength === 'not-selected',
-        typeSelected: smv.programType === 'not-selected',
-        dependencySelected: smv.programType === 'undergrad' && smv.dependencySelected === 'not-selected',
-        rateSelected: smv.programRate === 'not-selected' && control === 'Public'
-      };
+    const requiredErrors = {
+      housingSelected: smv.programHousing === 'not-selected',
+      dependencySelected: smv.programLevel === 'undergrad' && smv.programDependency === 'not-selected',
+      rateSelected: smv.programRate === 'not-selected' && control === 'Public'
+    };
 
-      // Change values to "required" which triggers error notification CSS rules
-      for ( let key in requiredErrors ) {
-        if ( requiredErrors[key] === true ) {
-          stateModel.values[key] = 'required';
-          updateStateInDom( key, 'required' );
-        }
+    // Change values to "required" which triggers error notification CSS rules
+    for ( let key in requiredErrors ) {
+      if ( requiredErrors[key] === true ) {
+        stateModel.values[key] = 'required';
+        updateStateInDom( key, 'required' );
+        stateModel.values['schoolErrors'] = 'yes';
+        updateStateInDom( 'schoolErrors', 'yes' );
+      } else {
+        stateModel.values[key] = false;
+        updateStateInDom( key, false );
       }
+    }
+
+    if ( stateModel.values.schoolErrors === 'no' ) {
+      stateModel.values.showschoolErrors = false;
+      updateStateInDom( 'showschoolErrors', false );
     }
   },
 
@@ -169,7 +174,6 @@ const stateModel = {
     }
     stateModel.values.salaryAvailable = available;
     updateStateInDom( 'salaryAvailable', available );
-    console.log( 'salaryAvailable set to "' + available + '".' );
   },
 
   /**
@@ -192,10 +196,10 @@ const stateModel = {
    */
   _updateApplicationState: ( property ) => {
     const urlParams = [ 'pid', 'programHousing','programType', 'programLength',
-      'programRate', 'programStudentType', 'costsQuestion', 'expensesRegion',
+      'programRate', 'programDependency', 'costsQuestion', 'expensesRegion',
       'impactOffer', 'impactLoans', 'utmSource', 'utm_medium', 'utm_campaign' ];
 
-    const finUpdate = [ 'programType', 'programRate', 'programStudentType',
+    const finUpdate = [ 'programType', 'programRate', 'programDependency',
       'programLength', 'programHousing' ];
 
     // Properties which require a URL querystring update:

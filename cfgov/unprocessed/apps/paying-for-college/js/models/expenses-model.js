@@ -1,7 +1,7 @@
 // This file contains the model for after-college expenses
 import { updateAffordingChart, updateCostOfBorrowingChart, updateExpensesView, updateFinancialView, updateUrlQueryString } from '../dispatchers/update-view.js';
 import { getExpenses } from '../dispatchers/get-api-values.js';
-import { getFinancialValue } from '../dispatchers/get-model-values.js';
+import { getFinancialValue, getStateValue } from '../dispatchers/get-model-values.js';
 import { stringToNum } from '../util/number-utils.js';
 import { updateState } from '../dispatchers/update-state.js';
 
@@ -10,10 +10,25 @@ import { updateState } from '../dispatchers/update-state.js';
 
 const expensesModel = {
   // Values of the currently selected region
-  values: {},
+  values: {
+    item_childcare: 0,
+    bls_item_childcare: 0
+  },
 
   // All data from the API
   rawData: {},
+
+  propertyTranslator: {
+    Clothing: 'item_clothing',
+    Entertainment: 'item_entertainment',
+    Food: 'item_food',
+    Healthcare: 'item_healthcare',
+    Housing: 'item_housing',
+    Retirement: 'item_retirement',
+    Taxes: 'item_taxes',
+    Transportation: 'item_transportation',
+    Other: 'item_other'
+  },
 
   /**
    * Calculate total monthly expenses
@@ -54,6 +69,7 @@ const expensesModel = {
       updateExpensesView();
       updateCostOfBorrowingChart();
       updateAffordingChart();
+      updateUrlQueryString();
     }
   },
 
@@ -94,49 +110,46 @@ const expensesModel = {
    * @param {string} region - Two letter code for region
    */
   setValuesByRegion( region ) {
-    const propertyTranslator = {
-      Clothing: 'item_clothing',
-      Entertainment: 'item_entertainment',
-      Food: 'item_food',
-      Healthcare: 'item_healthcare',
-      Housing: 'item_housing',
-      Retirement: 'item_retirement',
-      Taxes: 'item_taxes',
-      Transportation: 'item_transportation',
-      Other: 'item_other'
-    };
-
     const salary = getFinancialValue( 'salary_annual' ) || 0;
     const salaryRange = expensesModel._getSalaryRange( salary );
 
-    for ( const key in propertyTranslator ) {
-      if ( propertyTranslator.hasOwnProperty( key ) ) {
+    for ( const key in expensesModel.propertyTranslator ) {
+      if ( expensesModel.propertyTranslator.hasOwnProperty( key ) ) {
+        const property = expensesModel.propertyTranslator[key];
         let value = stringToNum(
           expensesModel.rawData[key][region][salaryRange]
         );
         value = Math.round( value / 12 );
-        expensesModel.values[propertyTranslator[key]] = value;
+        expensesModel.values['bls_' + property] = value;
+        expensesModel.values[property] = value;
       }
-    }
-
-    if ( typeof expensesModel.values.item_childcare === 'undefined' ) {
-      expensesModel.values.item_childcare = 0;
     }
 
     expensesModel.calculateTotals();
     updateUrlQueryString();
+    updateExpensesView();
   },
 
   /**
    * Initialize the model, fetch values from API
    */
   init: function() {
-    getExpenses()
-      .then( resp => {
-        expensesModel.rawData = JSON.parse( resp.responseText );
-        expensesModel.setValuesByRegion( 'NE' );
-        updateExpensesView();
-      } );
+    return new Promise( ( resolve, reject ) => {
+      getExpenses()
+        .then( resp => {
+          expensesModel.rawData = JSON.parse( resp.responseText );
+          for ( let key in expensesModel.propertyTranslator ) {
+            let prop = expensesModel.propertyTranslator[key];
+            expensesModel.values[prop] = 0;
+            expensesModel.values['bls_' + prop] = 0;
+          }
+          updateExpensesView();
+          resolve( true );
+        } )
+        .catch( function( error ) {
+          reject( error );
+        } );
+    } )
   }
 
 

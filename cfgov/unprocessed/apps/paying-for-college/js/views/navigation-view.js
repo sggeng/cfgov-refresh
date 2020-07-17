@@ -101,7 +101,6 @@ const navigationView = {
     } else if ( typeof target.dataset.nav_section !== 'undefined' ) {
       closest( target, '[data-nav-is-open]' ).setAttribute( 'data-nav-is-open', 'True' );
     }
-
   },
 
   /**
@@ -110,9 +109,16 @@ const navigationView = {
    */
   _handleNextButtonClick: function( event ) {
     // TODO: Track time between Next button clicks for analytics
-    sendAnalyticsEvent( 'next step - ' + getStateValue( 'activeSection' ), 'time-to-click' );
-    updateState.nextSection();
-    window.scrollTo( 0, document.querySelector( '.college-costs' ).offsetTop );
+    const activeSection = getStateValue( 'activeSection' )
+    sendAnalyticsEvent( 'next step - ' + activeSection, 'time-to-click' );
+
+    console.log( activeSection, getStateValue( 'schoolErrors' ) );
+    if ( activeSection === 'school-info' && getStateValue( 'schoolErrors' ) === 'yes' ) {
+      updateState.byProperty( 'showSchoolErrors', 'yes' );
+    } else {
+      updateState.nextSection();
+      window.scrollTo( 0, document.querySelector( '.college-costs' ).offsetTop );
+    }
   },
 
   /**
