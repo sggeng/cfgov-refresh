@@ -188,7 +188,8 @@ class AudioPlayer(AbstractMediaChooserBlock):
             [[flatatt(s)] for s in value.sources]
         ))
 
-
+class Meta:
+        icon = 'media'
 class PlaceholderFieldBlock(blocks.FieldBlock):
     def __init__(self, *args, **kwargs):
         super(PlaceholderFieldBlock, self).__init__(*args, **kwargs)
