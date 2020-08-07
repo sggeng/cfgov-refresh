@@ -54,6 +54,7 @@ jobs:
 
       - name: Check git branches
         run: |
+          git fetch origin master
           git branch
 
       - name: Set up Python
