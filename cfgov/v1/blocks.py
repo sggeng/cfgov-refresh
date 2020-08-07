@@ -166,7 +166,7 @@ class HeadingBlock(blocks.StructBlock):
         )
 
 
-class AudioPlayer(AbstractMediaChooserBlock):
+class AudioChooserBlock(AbstractMediaChooserBlock):
     def render_basic(self, value, context=None):
         if not value:
             return ''
@@ -187,9 +187,6 @@ class AudioPlayer(AbstractMediaChooserBlock):
             '\n', "<source{0}>",
             [[flatatt(s)] for s in value.sources]
         ))
-
-    class Meta:
-        icon = 'media'
 
 
 class PlaceholderFieldBlock(blocks.FieldBlock):
