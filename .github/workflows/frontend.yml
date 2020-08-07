@@ -53,7 +53,8 @@ jobs:
       - run: git fetch origin master
 
       - name: Check git branches
-        run: git branch
+        run: |
+          git branch
 
       - name: Set up Python
         uses: actions/setup-python@v1
